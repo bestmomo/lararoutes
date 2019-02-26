@@ -17,7 +17,7 @@
                 <template v-else-if="item.type == 'view'">
                     <span class="teal darken-3 white-text title">View</span>
                     <span class="teal lighten-2 white-text">{{ item.url }}</span>&nbsp;
-                    <span class="teal lighten-2 white-text">{{ item.name }}</span>
+                    <span class="teal lighten-2 white-text">{{ item.view }}</span>
                 </template>
                 <template v-else-if="item.type == 'auth'">
                     <span class="teal darken-3 white-text title">Auth</span>
@@ -63,6 +63,8 @@
                 </template>
                 <template v-else-if="item.type == 'view'">
                     <span v-if="item.parameters">Parameters:&nbsp;<span class="teal lighten-2 white-text">{{ item.parameters }}</span></span>
+                    <span v-if="item.name">Name:&nbsp;<span class="teal lighten-2 white-text">{{ item.name }}</span>&nbsp;</span>
+                    <span v-if="item.middlewares">Middlewares:&nbsp;<span class="teal lighten-2 white-text">{{ item.middlewares }}</span>&nbsp;</span>
                 </template>
                 <collapsible
                     :items="item.items"

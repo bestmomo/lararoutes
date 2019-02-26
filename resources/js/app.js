@@ -8,6 +8,7 @@
 window.$ = window.jQuery = require('jquery');
 require('materialize-css');
 window.uuid = require('uuid/v4');
+window.pluralize = require('pluralize');
 
 window.Vue = require('vue');
 
@@ -23,6 +24,7 @@ window.Vue = require('vue');
 Vue.component('create', require('./components/Create.vue').default);
 Vue.component('collapsible', require('./components/Collapsible.vue').default);
 Vue.component('generate', require('./components/Generate.vue').default);
+Vue.component('list', require('./components/List.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -31,6 +31,9 @@
                 }
                 return true;
             },
+            reset() {
+                this.text = '';
+            },
             loop(element) {
                 element.forEach(e => {
                     if(e.type == 'group') {
@@ -142,7 +145,7 @@
                     } else if(e.type == 'resource') {
                         this.text += this.tabs + "Route::resource('" + e.url + "', '" + e.controller + "')";
                         if(e.index || e.create || e.store || e.show || e.edit || e.update || e.destroy) {
-                            if(e.only) {
+                            if(e.partial == 'only') {
                                 this.text += '->only([ \n    ' + this.tabs;
                             } else {
                                 this.text += '->except([ \n    ' + this.tabs;
@@ -199,11 +202,18 @@
                         }
                         this.text += ';\n';
                     } else if(e.type == 'view') {
-                        this.text += this.tabs + "Route::view('" + e.url + "', '" + e.name + "'";
+                        this.text += this.tabs + "Route::view('" + e.url + "', '" + e.view + "'";
                         if(e.parameters) {
                             this.text += ", [" + e.parameters + ']';
                         }
-                        this.text += ');\n';
+                        this.text += ')';
+                        if(e.name) {
+                            this.text += "->name('" + e.name + "')";
+                        }
+                        if(e.middlewares) {
+                            this.text += "->middleware(['" + e.middlewares.replace(",", "','") + "'])";
+                        }
+                        this.text += ';\n';
                     } else if(e.type == 'auth') {
                         this.text += this.tabs + 'Auth::routes(';
                         if(e.verify) {

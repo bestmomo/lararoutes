@@ -1,0 +1,4 @@
+- ## Get Started
+    - [Overview](/docs/{{version}}/overview)
+    - [Getting started](/docs/{{version}}/started)
+    - [Routes types](/docs/{{version}}/types)

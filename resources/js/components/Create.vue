@@ -263,14 +263,24 @@
                                 <label for="viewUrl">Url</label>
                             </div>
                             <div class="input-field col s6">
+                                <input v-model="values.view" id="view" name="view" type="text">
+                                <label for="view">View</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input v-model="values.parameters" id="viewParameters" name="viewParameters" type="text" placeholder="['key' => 'value']">
+                                <label for="viewParameters">Parameters</label>
+                            </div>
+                            <div class="input-field col s6">
                                 <input v-model="values.name" id="viewName" name="viewName" type="text">
                                 <label for="viewName">Name</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <input v-model="values.parameters" id="viewParameters" name="viewParameters" type="text" placeholder="['key' => 'value']">
-                                <label for="viewParameters">Parameters</label>
+                                <input v-model="values.middlewares" id="viewMiddlewares" name="viewMiddlewares" type="text">
+                                <label for="viewMiddlewares">Middlewares</label>
                             </div>
                         </div>
                     </form>
@@ -306,6 +316,13 @@
             </div>
         </div>
 
+        <div id="list" class="modal bottom-sheet">
+            <list :items="items" ref="list"></list>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+
         <div class="row">
             <div v-if="auth" class="input-field col s6">
                 <input v-model="routeName" id="routename" name="routename" type="text">
@@ -314,6 +331,7 @@
             <div class="input-field col s6">
                 <a v-if="auth" class="waves-effect waves-light btn" @click="saveRoute()">Save</a>
                 <a class="waves-effect waves-light btn" @click="generate()">Generate</a>
+                <a class="waves-effect waves-light btn" @click="list()">List</a>
             </div>
         </div>
         <hr>
@@ -497,9 +515,11 @@
                 } else if(this.add == 'view') {
                     newItem = {
                         id: uuid(),
-                        name: 'welcome',
+                        view: 'welcome',
+                        name: '',
                         url: 'url',
                         type: 'view',
+                        middlewares: '',
                         parameters: ''
                     }
                 } else if(this.add == 'auth') {
@@ -515,9 +535,15 @@
                 this.values = values;
                 $('#edit-' + values.type).modal('open');
             },
-            generate(values) {
+            generate() {
+                this.$refs.generator.reset();
                 this.$refs.generator.loop(this.items);
                 $('#generate').modal('open');
+            },
+            list() {
+                this.$refs.list.reset();
+                this.$refs.list.loop(this.items);
+                $('#list').modal('open');
             },
             paste(items, index) {
                 if(!$.isEmptyObject(this.clipboard)) {
