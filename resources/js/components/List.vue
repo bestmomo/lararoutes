@@ -169,7 +169,8 @@
                             el = {};
                             el.method = 'get';
                             el.uri = this.setPrefix(e.url);
-                            el.name = this.setName(e.url) + '.index';
+                            if(e.indexName) el.name = this.setName(e.indexName);
+                            else el.name = this.setName(e.url) + '.index';
                             el.action = this.setNamespace(controller) + '@index';
                             this.lines.push(el);
                         }
@@ -177,7 +178,8 @@
                             el = {};
                             el.method = 'post';
                             el.uri = this.setPrefix(e.url);
-                            el.name = this.setName(e.url) + '.store';
+                            if(e.storeName) el.name = this.setName(e.storeName);
+                            else el.name = this.setName(e.url) + '.store';
                             el.action = this.setNamespace(controller) + '@store';
                             this.lines.push(el);
                         }
@@ -185,7 +187,8 @@
                             el = {};
                             el.method = 'get';
                             el.uri = this.setPrefix(e.url) + '/create';
-                            el.name = this.setName(e.url) + '.create';
+                            if(e.createName) el.name = this.setName(e.createName);
+                            else el.name = this.setName(e.url) + '.create';
                             el.action = this.setNamespace(controller) + '@create';
                             this.lines.push(el);
                         }
@@ -193,7 +196,8 @@
                             el = {};
                             el.method = 'get';
                             el.uri = this.setPrefix(e.url) + '/{' + singular + '}';
-                            el.name = this.setName(e.url) + '.show';
+                            if(e.showName) el.name = this.setName(e.showName);
+                            else el.name = this.setName(e.url) + '.show';
                             el.action = this.setNamespace(controller) + '@show';
                             this.lines.push(el);
                         }
@@ -201,7 +205,8 @@
                             el = {};
                             el.method = 'put';
                             el.uri = this.setPrefix(e.url) + '/{' + singular + '}';
-                            el.name = this.setName(e.url) + '.update';
+                            if(e.updateName) el.name = this.setName(e.updateName);
+                            else el.name = this.setName(e.url) + '.update';
                             el.action = this.setNamespace(controller) + '@update';
                             this.lines.push(el);
                         }
@@ -209,7 +214,8 @@
                             el = {};
                             el.method = 'delete';
                             el.uri = this.setPrefix(e.url) + '/{' + singular + '}';
-                            el.name = this.setName(e.url) + '.destroy';
+                            if(e.destroyName) el.name = this.setName(e.destroyName);
+                            else el.name = this.setName(e.url) + '.destroy';
                             el.action = this.setNamespace(controller) + '@destroy';
                             this.lines.push(el);
                         }
@@ -217,7 +223,8 @@
                             el = {};
                             el.method = 'get';
                             el.uri = this.setPrefix(e.url) + '/{' + singular + '}/edit';
-                            el.name = this.setName(e.url) + '.edit';
+                            if(e.editName) el.name = this.setName(e.editName);
+                            else el.name = this.setName(e.url) + '.edit';
                             el.action = this.setNamespace(controller) + '@edit';
                             this.lines.push(el);
                         }
