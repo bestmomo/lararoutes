@@ -3,7 +3,7 @@
         <button id="btn-copy" class="waves-effect waves-light btn right" @click="copyCode">Copy</button>
         <div id="code-generated" class="row">
             <div class="input-field col s12">
-                <textarea id="to-copy" cols="80" rows="80">{{ text }}</textarea>
+                <textarea id="to-copy" cols="80" rows="80" v-model="text"></textarea>
             </div>
         </div>
     </div>
@@ -231,3 +231,10 @@
     }
 </script>
 
+<style scoped>
+
+    textarea {
+        height: 50%;
+    }
+
+</style>

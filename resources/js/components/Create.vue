@@ -241,7 +241,7 @@
                                 </div>
                                 <div class="input-field col s3">
                                     <input v-model="values.destroyName" id="destroyName" name="destroyName" type="text">
-                                    <label for="destroyName">destroy</label>
+                                    <label for="destroyName">Destroy</label>
                                 </div>
                             </div>
                         </div>
@@ -310,7 +310,9 @@
         </div>
 
         <div id="generate" class="modal">
-            <generate :items="items" ref="generator"></generate>
+            <div class="modal-content">
+                <generate :items="items" ref="generator"></generate>
+            </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
             </div>
@@ -318,6 +320,13 @@
 
         <div id="list" class="modal bottom-sheet">
             <list :items="items" ref="list"></list>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+
+        <div id="controllers" class="modal">
+            <controllers :items="items" ref="controllers"></controllers>
             <div class="modal-footer">
                 <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
             </div>
@@ -332,6 +341,7 @@
                 <a v-if="auth" class="waves-effect waves-light btn" @click="saveRoute()">Save</a>
                 <a class="waves-effect waves-light btn" @click="generate()">Generate</a>
                 <a class="waves-effect waves-light btn" @click="list()">List</a>
+                <a class="waves-effect waves-light btn" @click="controllers()">Controllers</a>
             </div>
         </div>
         <hr>
@@ -423,7 +433,7 @@
             }
         },
         methods: {
-            down(items, index) {console.log(items)
+            down(items, index) {
                 this.cut(items, index, true);
                 this.paste(items, index);
                 $('.tooltipped').tooltip('close');
@@ -545,6 +555,12 @@
                 this.$refs.list.loop(this.items);
                 $('#list').modal('open');
             },
+            controllers() {
+                this.$refs.controllers.reset();
+                this.$refs.controllers.loop(this.items);
+                this.$refs.controllers.generate();
+                $('#controllers').modal('open');
+            },
             paste(items, index) {
                 if(!$.isEmptyObject(this.clipboard)) {
                     let temp = JSON.parse(JSON.stringify(this.clipboard), (key, value) => {
@@ -570,7 +586,7 @@
                 this.cutIndex = index;
                 if(!move) M.toast({html: 'Element cuted'});
             },
-            del(items, index) {console.log(index)
+            del(items, index) {
                 items = items.splice(index, 1);
                 $('.tooltipped').tooltip('close');
             }

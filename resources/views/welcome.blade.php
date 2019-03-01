@@ -114,7 +114,7 @@
             <a href="{{ url('docs') }}" id="download-button" class="btn waves-effect waves-light teal lighten-1" target="_blank">Documentation</a>
         </div>
         <div class="row center">
-            <h6 class="header col s12 light">Version alpha 0.2</h6>
+            <h6 class="header col s12 light">Version alpha 0.3</h6>
         </div>
         <br><br>
 
@@ -134,20 +134,26 @@
                     <img src="img/routes.png" alt="routes">
                 </div>
             </div>
-        </div>
-
-
-        <div class="col m12 l6">
-            <h5 class="header">Then generate the code !</h5>
+            <h5 class="header">Generate the routes</h5>
             <div class="card">
                 <div class="card-image">
                     <img src="img/generate.png" alt="generated">
                 </div>
             </div>
-            <h5 class="header">Or list the routes</h5>
+        </div>
+
+
+        <div class="col m12 l6">
+            <h5 class="header">List the routes</h5>
             <div class="card">
                 <div class="card-image">
                     <img src="img/list.png" alt="list">
+                </div>
+            </div>
+            <h5 class="header">Generate the controllers</h5>
+            <div class="card">
+                <div class="card-image">
+                    <img src="img/controllers.png" alt="list">
                 </div>
             </div>
         </div>
