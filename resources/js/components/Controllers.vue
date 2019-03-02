@@ -14,12 +14,27 @@
         data () {
             return {
                 texts: [],
+                prefix: [],
                 controllers: []
             }
         },
         methods: {
             reset() {
                 this.controllers = [];
+            },
+            setPrefix(prefix) {
+                return this.setElement(this.prefix, prefix, '/');
+            },
+            setElement(elements, element, separator) {
+                if(elements.length) {
+                    let el = '';
+                    elements.forEach(e => {
+                        if(e != '') el += e + separator;
+                    });
+                    if(element == '') return el.slice(0, -1);
+                    return el + element;
+                }
+                return element;
             },
             checkAbsent(value) {
                 return !this.controllers.some(e => {
@@ -35,20 +50,32 @@
                     }
                 });
             },
+            getParams(text) {
+                const regex = /{(.*?)}/g;
+                let found = text.match(regex).map(el => el.slice(1, -1));
+                if(found) {
+                    return found.map(function(e) { return '$' + e });
+                }
+                else return [];
+            },
             loop(element) {
                 element.forEach(e => {
                     let u = 0;
                     if(e.type == 'group') {
+                        this.prefix.push(e.prefix);
                         if(e.items) {
                             this.loop(e.items);
                         }
+                        this.prefix.pop();
                     } else if(e.type == 'route' && e.subType == 'method') {
                         let controller = e.content.split('@')[0];
                         if(this.checkAbsent(controller)) {
                             this.controllers.push({'name': controller, 'functions': []});
                         }
+                        let uri = this.setPrefix(e.url);
+                        let params = this.getParams(uri);
                         let method = e.content.split('@')[1];
-                        this.addMethod(controller, method);
+                        this.addMethod(controller, [method, params]);
                     } else if(e.type == 'resource') {
                         let f = [1,1,1,1,1,1,1];
                         let controller = e.controller;
@@ -75,13 +102,13 @@
                                 if(e.destroy) f[6] = false;
                             }
                         }
-                        if(f[0]) this.addMethod(controller, 'index');
-                        if(f[2]) this.addMethod(controller, 'store');
-                        if(f[1]) this.addMethod(controller, 'create');
-                        if(f[3]) this.addMethod(controller, 'show');
-                        if(f[5]) this.addMethod(controller, 'update');
-                        if(f[6]) this.addMethod(controller, 'destroy');
-                        if(f[4]) this.addMethod(controller, 'edit');
+                        if(f[0]) this.addMethod(controller, ['index']);
+                        if(f[2]) this.addMethod(controller, ['store']);
+                        if(f[1]) this.addMethod(controller, ['create']);
+                        if(f[3]) this.addMethod(controller, ['show']);
+                        if(f[5]) this.addMethod(controller, ['update']);
+                        if(f[6]) this.addMethod(controller, ['destroy']);
+                        if(f[4]) this.addMethod(controller, ['edit']);
                     }
                 })
             },
@@ -92,7 +119,7 @@
                     let el = '<?php\n\nnamespace App\\Http\\Controllers;\n\nuse App\\Http\\Controllers\\Controller;\n\nclass ';
                     el += controller.name + ' extends Controller\n{\n';
                     controller.functions.forEach(method => {
-                        switch (method) {
+                        switch (method[0]) {
                             case 'index':
                                 el += this.generateDoc('Display a listing of the resource.', [])
                                 break;
@@ -121,10 +148,10 @@
                                     ['int  $id']);
                                 break;
                             default:
-                                el += this.generateDoc('Some elements there.', []);
+                                el += this.generateDoc('Some elements there.', method[1]);
                         }
-                        el += tab + 'public function ' + method + '(';
-                        switch (method) {
+                        el += tab + 'public function ' + method[0] + '(';
+                        switch (method[0]) {
                             case 'store':
                                 el += 'Request $request';
                                 break;
@@ -140,6 +167,18 @@
                             case 'destroy':
                                 el += '$id';
                                 break;
+                            default:
+                                if(method[0] != 'index' && method[0] != 'create') {
+                                    method[1].forEach(param => {
+                                        if(param.substring(param.length - 1, param.length) == '?') {
+                                            param = param.substring(0, param.length - 1);
+                                            el += param + " = null, ";
+                                        } else {
+                                            el += param + ', ';
+                                        }
+                                    });
+                                    el = el.substring(0, el.length - 2);
+                                }
                         }
                         el += ')\n' + tab + '{\n\n' + tab + '}\n\n';
                     });
@@ -153,6 +192,7 @@
                 doc += tab + ' * ' + title + '\n';
                 doc += tab + ' *\n';
                 params.forEach(e => {
+                    if(e.substring(e.length - 1, e.length) == '?') e = e.substring(0, e.length - 1);
                     doc += tab + ' * @param ' + e + '\n';
                 });
                 doc += tab + ' * @return \\Illuminate\\Http\\Response\n';
