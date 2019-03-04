@@ -52,8 +52,9 @@
             },
             getParams(text) {
                 const regex = /{(.*?)}/g;
-                let found = text.match(regex).map(el => el.slice(1, -1));
+                let found = text.match(regex);
                 if(found) {
+                    found = found.map(el => el.slice(1, -1));
                     return found.map(function(e) { return '$' + e });
                 }
                 else return [];
@@ -169,15 +170,17 @@
                                 break;
                             default:
                                 if(method[0] != 'index' && method[0] != 'create') {
-                                    method[1].forEach(param => {
-                                        if(param.substring(param.length - 1, param.length) == '?') {
-                                            param = param.substring(0, param.length - 1);
-                                            el += param + " = null, ";
-                                        } else {
-                                            el += param + ', ';
-                                        }
-                                    });
-                                    el = el.substring(0, el.length - 2);
+                                    if(method[1].length) {
+                                        method[1].forEach(param => {
+                                            if(param.substring(param.length - 1, param.length) == '?') {
+                                                param = param.substring(0, param.length - 1);
+                                                el += param + " = null, ";
+                                            } else {
+                                                el += param + ', ';
+                                            }
+                                        });
+                                        el = el.substring(0, el.length - 2);
+                                    }
                                 }
                         }
                         el += ')\n' + tab + '{\n\n' + tab + '}\n\n';
